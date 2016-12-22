@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vosi:capabilities xmlns:vosi="http://www.ivoa.net/xml/VOSICapabilities/v1.0" xmlns:vod="http://www.ivoa.net/xml/VODataService/v1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
+        <interface xsi:type="vod:ParamHTTP" role="std">
+            <accessURL use="full">http://replace.me.com/cred/capabilities</accessURL>
+        </interface>
+    </capability>
+  
+    <capability standardID="ivo://ivoa.net/std/VOSI#availability">
+        <interface xsi:type="vod:ParamHTTP" role="std">
+            <accessURL use="full">http://replace.me.com/cred/availability</accessURL>
+        </interface>
+    </capability>
+    
+    <capability standardID="vos://cadc.nrc.ca~vospace/CADC/std/Logging#control-1.0">
+        <interface xsi:type="vod:ParamHTTP" role="std" version="1.0">
+            <accessURL use="full">https://replace.me.com/cred/logControl</accessURL>
+        </interface>
+    </capability>
+    
+    <capability standardID="ivo://ivoa.net/std/CDP#delegate-1.0">
+        <interface xsi:type="vod:ParamHTTP" role="std" version="1.0">
+            <accessURL use="base">https://replace.me.com/cred</accessURL>
+            <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate" />
+        </interface>
+    </capability>
+    
+    <capability standardID="ivo://ivoa.net/std/CDP#proxy-1.0">
+        
+        <!-- need to add interfaces for cookie and token -->
+        <interface xsi:type="vod:ParamHTTP" role="std" version="1.0">
+            <accessURL use="base">https://replace.me.com/cred/auth/priv</accessURL>
+            <securityMethod standardID="http://www.w3.org/Protocols/HTTP/1.0/spec.html#BasicAA" />
+        </interface>
+        
+        <interface xsi:type="vod:ParamHTTP" role="std" version="1.0">
+            <accessURL use="base">https://replace.me.com/cred/priv</accessURL>
+            <securityMethod standardID="vos://oats.inaf.it~vospace/CADC/std/Auth#token-1.0" />
+        </interface>
+        
+        <interface xsi:type="vod:ParamHTTP" role="std" version="1.0">
+            <accessURL use="base">https://replace.me.com/cred/priv</accessURL>
+            <securityMethod standardID="ivo://ivoa.net/sso#cookie" />
+        </interface>
+        
+        <interface xsi:type="vod:ParamHTTP" role="std" version="1.0">
+            <accessURL use="base">https://replace.me.com/cred/priv</accessURL>
+            <securityMethod standardID="ivo://ivoa.net/sso#tls-with-certificate" />
+        </interface>
+        
+    </capability>
+    
+</vosi:capabilities>

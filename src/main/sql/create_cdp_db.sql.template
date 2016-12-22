@@ -1,0 +1,57 @@
+/**_____________________________________________________________________________
+ *
+ *                                 OATS - INAF
+ *  Osservatorio Astronomico di Tireste - Istituto Nazionale di Astrofisica
+ *  Astronomical Observatory of Trieste - National Institute for Astrophysics
+ * ____________________________________________________________________________
+ *
+ * Copyright (C) 20016  Istituto Nazionale di Astrofisica
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * _____________________________________________________________________________
+ **/
+
+/*
+This file contains the complete database needed to run a VOSpace:
+the VOSpace front-end tables to manage stored files metadata
+the VOSpace back-end tables to manage stored files 
+the UWS tables to manage Job metadata
+*/
+
+/*
+    DataBase creation and grant assignment
+*/
+
+CREATE DATABASE YOUR_DATABASE_NAME;
+
+use YOUR_DATABASE_NAME;
+
+grant all on YOUR_DATABASE_NAME.* to 'YOUR_DATABASE_USER' identified by 'YOUR_DATABASE_USER_NAME';
+
+/*
+    VOSpace back-end
+*/
+CREATE TABLE x509_certificates
+(
+    canon_dn        VARCHAR(256) NOT NULL,
+    exp_date        DATETIME     default CURRENT_TIMESTAMP,
+    cert_chain      TEXT,
+    private_key     BLOB,
+    csr             TEXT,
+    hash_dn         VARCHAR(256) NOT NULL,
+    PRIMARY KEY (hash_dn)
+
+) ENGINE=InnoDB; 
+

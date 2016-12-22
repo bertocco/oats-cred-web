@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**_____________________________________________________________________________
+ *
+ *                                 OATS - INAF
+ *  Osservatorio Astronomico di Tireste - Istituto Nazionale di Astrofisica
+ *  Astronomical Observatory of Trieste - National Institute for Astrophysics
+ * ____________________________________________________________________________
+ *
+ * Copyright (C) 20016  Istituto Nazionale di Astrofisica
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation, Inc., 
+ * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * _____________________________________________________________________________
+ **/
+-->
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+
+<web-app>
+
+  <display-name>YOUR SERVICE DISPLAY NAME</display-name>
+   
+   <servlet>javax.servlet.request.X509Certificate
+    <servlet-name>CadcDelegationServlet</servlet-name>
+        <servlet-class>ca.nrc.cadc.cred.server.CadcDelegationServlet</servlet-class>
+            <init-param>
+                <param-name>SU_DNS</param-name>
+                <param-value>"X509 CERTIFICATE SUBJECT OF A SUPER USER"
+                </param-value>
+                
+                <load-on-startup>2</load-on-startup>
+            </init-param>
+   </servlet>
+   
+   <servlet>
+     <servlet-name>ProxyServlet</servlet-name>
+     <servlet-class>ca.nrc.cadc.cred.server.ProxyServlet</servlet-class>
+     <init-param>
+        <param-name>trustedPrincipals</param-name>
+        <!--
+        Trusted principals can download proxy certs for all users.
+        Format:
+         DN [: max days valid]
+        where DN: the Distinguished Name of the trusted client
+              max days valid: is the maximum number of days for the
+          returned proxy certificate. If present, this parameter
+          puts a cap on the proxy lifetime requested by the client.
+        -->
+       <param-name>
+         "X509 CERTIFICATE SUBJECT OF THE TRUSTED PROXY USER"
+        </param-value>
+     </init-param>
+     <init-param>
+        <param-name>datasource</param-name>
+        <param-value>jdbc/YOUR_DATABASE_NAME</param-value>
+     </init-param>
+     <init-param>
+         <param-name>catalog</param-name>
+         <param-value>YOUR_DATABASE_NAME</param-value>
+     </init-param>
+     <!--
+     <init-param>
+         <param-name>schema</param-name>
+         <param-value>default</param-value>
+     </init-param>
+     -->
+     <load-on-startup>2</load-on-startup>
+   </servlet>
+   
+  <servlet>
+    <servlet-name>AvailabilityServlet</servlet-name>
+    <servlet-class>ca.nrc.cadc.vosi.AvailabilityServlet</servlet-class>
+    <init-param>
+      <param-name>ca.nrc.cadc.vosi.WebService</param-name>
+      <param-value>ca.nrc.cadc.ac.server.web.ServiceAvailability</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+
+   <servlet>
+    <servlet-name>CapabilitiesServlet</servlet-name>
+        <servlet-class>ca.nrc.cadc.vosi.CapabilitiesServlet</servlet-class>
+            <init-param>
+                <param-name>input</param-name>
+                <param-value>/capabilities.xml</param-value>
+            </init-param>
+   </servlet>
+   
+  <servlet>
+    <!--
+        To make sure the logging level gets set before any
+        logging gets done, set load-on-startup to a smaller
+        whole number than is used for any other servlet
+        in this webapp.  This assumes Tomcat 5.5 or later.
+    -->
+    <servlet-name>logControl</servlet-name>
+    <servlet-class>ca.nrc.cadc.log.LogControlServlet</servlet-class>
+    <init-param>
+      <param-name>logLevel</param-name>
+      <param-value>debug</param-value>
+    </init-param>
+    <init-param>
+      <param-name>logLevelPackages</param-name>
+      <param-value>
+        ca.nrc.cadc.auth
+          <!--
+        ca.nrc.cadc.ac
+        ca.nrc.cadc.vosi
+        -->
+	ca.nrc.cadc.core
+          <!--
+	ca.nrc.cadc.reg
+        -->
+	ca.nrc.cadc.cred
+        ca.nrc.cadc.cred.client
+        ca.nrc.cadc.cred.client.priv
+        ca.nrc.cadc.cred.server
+        ca.nrc.cadc.cred.server.actions
+        ca.nrc.cadc.cert
+        ca.nrc.cadc.net
+        org.astrogrid.security.delegation
+      </param-value>
+    </init-param>
+<!--
+    <init-param>
+        <param-name>logAccessGroup</param-name>
+        <param-value>LOG_CONTROL_AUTHORIZED_GROUP</param-value>
+    </init-param>
+    <init-param>
+        <param-name>groupAuthorizer</param-name>
+        <param-value>ca.nrc.cadc.auth.CADCGroupAuthorizer</param-value>
+    </init-param>
+-->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+        
+   <servlet-mapping>
+       <servlet-name>CadcDelegationServlet</servlet-name>
+       <url-pattern>/auth/*</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+       <servlet-name>CadcDelegationServlet</servlet-name>
+       <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+     <servlet-name>ProxyServlet</servlet-name>
+     <url-pattern>/priv/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+     <servlet-name>ProxyServlet</servlet-name>
+     <url-pattern>/auth/priv/*</url-pattern>
+   </servlet-mapping>
+   
+   <!--
+   <servlet-mapping>
+     <servlet-name>AvailabilityServlet</servlet-name>
+     <url-pattern>/availability</url-pattern>
+   </servlet-mapping>
+   -->
+
+   <servlet-mapping>
+       <servlet-name>CapabilitiesServlet</servlet-name>
+     <url-pattern>/capabilities</url-pattern>
+   </servlet-mapping>
+
+   <!--
+     The Log service
+   -->
+   <servlet-mapping>
+       <servlet-name>logControl</servlet-name>
+       <url-pattern>/logControl</url-pattern>
+   </servlet-mapping>
+   
+<!-- Define the public security role -->
+<security-role>
+    <description>Public security role</description>
+    <role-name>public</role-name>
+</security-role>
+
+<!-- Define a security constraint for auth servlet -->
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>auth</web-resource-name>
+        <description/>
+        <url-pattern>/auth/*</url-pattern>
+        <!--
+              <url-pattern>/logControl/*</url-pattern>
+        -->
+        <http-method>GET</http-method>
+        <http-method>POST</http-method>
+        <http-method>HEAD</http-method>
+        <http-method>PUT</http-method>
+        <http-method>OPTIONS</http-method>
+        <http-method>TRACE</http-method>
+        <http-method>DELETE</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+        <description>force authentication for all requests</description>
+        <role-name>public</role-name>
+    </auth-constraint>
+</security-constraint>
+
+<!--
+  BASIC Http Authentication for logControl
+-->
+<login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>YOUR_REALM_NAME</realm-name>
+</login-config>
+   
+</web-app>  

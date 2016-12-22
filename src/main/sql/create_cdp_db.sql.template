@@ -23,12 +23,6 @@
  * _____________________________________________________________________________
  **/
 
-/*
-This file contains the complete database needed to run a VOSpace:
-the VOSpace front-end tables to manage stored files metadata
-the VOSpace back-end tables to manage stored files 
-the UWS tables to manage Job metadata
-*/
 
 /*
     DataBase creation and grant assignment
@@ -41,7 +35,7 @@ use YOUR_DATABASE_NAME;
 grant all on YOUR_DATABASE_NAME.* to 'YOUR_DATABASE_USER' identified by 'YOUR_DATABASE_USER_NAME';
 
 /*
-    VOSpace back-end
+    Credential delegation service database
 */
 CREATE TABLE x509_certificates
 (
@@ -54,4 +48,21 @@ CREATE TABLE x509_certificates
     PRIMARY KEY (hash_dn)
 
 ) ENGINE=InnoDB; 
+
+
+/*
+DB versions support:
+Since MariaDB 10.0.1, DATETIME columns also accept CURRENT_TIMESTAMP as the default value.
+Since MySQL 5.6.X CURRENT_TIMESTAMP is supported.
+For older versions it can be set as example:
+lastModified      DATETIME          default NULL
+and then a trigger can be used to set a current timestamp as default. Example:
+
+DELIMITER ;;
+CREATE TRIGGER `my_trigger` BEFORE INSERT ON `my_table` FOR EACH ROW
+BEGIN
+    SET NEW.date_to_be_set = NOW();
+END;;
+DELIMITER ;
+*/
 

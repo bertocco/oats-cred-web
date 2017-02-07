@@ -30,9 +30,11 @@
 
 CREATE DATABASE YOUR_DATABASE_NAME;
 
-use YOUR_DATABASE_NAME;
+CREATE USER 'YOUR_DB_USER'@'localhost' identified by 'YOUR_DB_PASSWORD';
 
-grant all on YOUR_DATABASE_NAME.* to 'YOUR_DATABASE_USER' identified by 'YOUR_DATABASE_USER_NAME';
+grant all on YOUR_DATABASE_NAME.* to 'YOUR_DATABASE_USER' identified by 'YOUR_DATABASE_USER_PASSWORD';
+
+use YOUR_DATABASE_NAME;
 
 /*
     Credential delegation service database
